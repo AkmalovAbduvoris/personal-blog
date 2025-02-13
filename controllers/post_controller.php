@@ -19,7 +19,6 @@ $editPost = function($newTitle, $newText, $newStatus, $id) use ($db) {
 
 $fetchPosts = function()  use ($db) {
     $data = $db->query("SELECT posts.id, title, text, name, created_at, updated_at FROM posts JOIN users on posts.user_id = users.id WHERE status = 'published'")->fetchAll(PDO::FETCH_ASSOC); 
-    
     return $data;
 };
 
@@ -40,4 +39,18 @@ $getPostById = function($id) use ($db) {
 $singlePost = function($id) use ($db) {
     $item = $db->query("SELECT * FROM posts WHERE id = $id")->fetch(PDO::FETCH_ASSOC);
     return $item;
+};
+
+$searchPost = function($search) use ($db) {
+    $stmt = $db->prepare("SELECT posts.id, title, text, name, created_at, updated_at 
+                          FROM posts 
+                          JOIN users ON posts.user_id = users.id 
+                          WHERE status = 'published' 
+                          AND title LIKE :search");
+    
+    $like = "%$search%";
+    $stmt->bindParam(':search', $like, PDO::PARAM_STR);
+    $stmt->execute();
+    
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 };

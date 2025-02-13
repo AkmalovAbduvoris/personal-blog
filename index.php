@@ -2,10 +2,17 @@
 session_start();
 require "./controllers/post_controller.php";
 
+$data = $fetchPosts();
+
 if(isset($_COOKIE['user'])) {
 	$user = $_COOKIE['user'];
 }else {
    header("Location: /pages/login.php");
+}
+
+if(isset($_POST['findPost'])) {
+    $search = trim($_POST['findPost']);
+    $data = $searchPost($search);
 }
 ?>
 <!DOCTYPE html>
@@ -16,7 +23,7 @@ if(isset($_COOKIE['user'])) {
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <link rel="stylesheet" href="../css/style.css">
         <title>Document</title>
-    </head>
+    </head> 
     <body>
     <header>
         <div class="container">
@@ -39,9 +46,15 @@ if(isset($_COOKIE['user'])) {
     </header>
         <div class="wrapper">
             <div class="container">
+                <form action="/" method="post">
+                    <div style="display: flex; width: 50%; margin: 0 auto;">
+                        <input class="form-control" type="text" name="findPost" id="" placeholder="Qidirish:">
+                        <button type="sumbit">Qidirish</button>
+                    </div>
+                </form>
             <ul class="list">
             <?php
-            $data = $fetchPosts();
+            
                 if(count($data) > 0) {
                     foreach($data as $item) {
                         echo "

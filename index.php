@@ -4,11 +4,8 @@ require "./controllers/post_controller.php";
 
 $data = $fetchPosts();
 
-if(isset($_SESSION['email'])) {
-    var_dump($_SESSION['email']);
-}
-else {
-   header("Location: /pages/login.php");
+if(!isset($_SESSION['email'])) {
+    header("Location: /pages/login.php");
 }
 
 if(isset($_POST['findPost'])) {

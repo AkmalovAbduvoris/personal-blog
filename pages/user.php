@@ -1,5 +1,4 @@
 <?php
-    require "../db.php";
     require "../controllers/user_controller.php";
     require "../controllers/post_controller.php";
 
@@ -9,38 +8,23 @@
 
     $userId = $findUserId();
 
-    $data = $userPost($userId);
-
     if($text != null && $title != null) {
-       $createPost($title,$text,$status,$userId);
+        $createPost($title,$text,$status,$userId);
+    }
+    
+    if (isset($_POST['newTitle'],$_POST['newText'],$_POST['newId'],$_POST['newStatus'])){
+        $newTitle = $_POST['newTitle'];
+        $newText = $_POST['newText'];
+        $newStatus = $_POST['newStatus'];
+        $id =$_POST['newId'];
+        $editPost($newTitle, $newText, $newStatus, $id);
     }
 
     if (isset($_POST['deleteId'])) {
         $deletePost();
     }
 
-    // if($text != null && $title != null) {
-    //     $stmt = $db->prepare("INSERT INTO posts(title, text, status, user_id ) VALUES(:title, :text, :status, :user_id)");
-    //     $stmt->bindParam(':title', $title);
-    //     $stmt->bindParam(':text', $text);
-    //     $stmt->bindParam(':status', $status);
-    //     $stmt->bindParam(':user_id', $userId);
-    //     $stmt->execute();
-    // }
-
-    // if (isset($_POST['newTitle'],$_POST['newText'],$_POST['newId'],$_POST['newStatus'])){
-    //     $newTitle = $_POST['newTitle'];
-    //     $newText = $_POST['newText'];
-    //     $newStatus = $_POST['newStatus'];
-    //     $id = $_POST['newId'];
-    //     $stmt = $db->prepare("UPDATE posts SET title = :title, text = :text, status = :status WHERE id = :id");
-    //     $stmt->bindParam(':title', $newTitle);
-    //     $stmt->bindParam(':text', $newText);
-    //     $stmt->bindParam(':status', $newStatus);
-    //     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-    //     $stmt->execute();
-    // }
-  
+    $data = $userPost($userId);
 ?>
 
 <!DOCTYPE html>

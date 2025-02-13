@@ -1,18 +1,12 @@
 <?php
-require "../db.php";
 require "../controllers/post_controller.php";
-if (isset($_POST['newTitle'],$_POST['newText'],$_POST['newId'],$_POST['newStatus'])){
-    $editPost();
-}
 $title = isset($_POST['title']) ? $_POST['title'] : null;
 $text = isset($_POST['text']) ? $_POST['text'] : null;
+
 if (isset($_POST['id'])){
     $id = $_POST['id'];
+    $data = $getPostById($id);
 }
-$data = $db->query("SELECT * FROM posts WHERE id = $id")->fetch(PDO::FETCH_ASSOC);
-$byIdTitle =  $data['title'];
-$byIdText = $data['text'];
-$byIdStatus = $data['status'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -34,13 +28,13 @@ $byIdStatus = $data['status'];
         </div>
     </header>
     <div class="container">
-    <form class="form" action="/pages/edit_post.php" method="POST">
+    <form class="form" action="/pages/user.php" method="POST">
         <input type="hidden" value='<?php echo $id; ?>' name="newId">
-        <input value="<?php echo "$byIdTitle";?>" type="text" name="newTitle" id="" placeholder="Sarlavhani yozing">
-        <input value="<?php echo "$byIdText";?>" type="text" name="newText" id="" placeholder="Text qo'shing">
+        <input value="<?php echo "{$data['title']}";?>" type="text" name="newTitle" id="" placeholder="Sarlavhani yozing">
+        <input value="<?php echo "{$data['text']}";?>" type="text" name="newText" id="" placeholder="Text qo'shing">
         <select name="newStatus" id="">
-            <option value="drafted" <?= ($byIdStatus === "drafted") ? "selected" : ""; ?>>Drafted</option>
-        <option value="published" <?= ($byIdStatus === "published") ? "selected" : ""; ?>>Published</option>
+            <option value="drafted" <?= ($data['status'] === "drafted") ? "selected" : ""; ?>>Drafted</option>
+        <option value="published" <?= ($data['status'] === "published") ? "selected" : ""; ?>>Published</option>
         </select>
         <button class="" type="submit">Update task</button>
     </form>

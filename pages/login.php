@@ -1,15 +1,17 @@
 <?php
+session_start();
 require "../controllers/user_controller.php";
+
 if(isset($_POST['userEmail'],$_POST['userPass'])) {
 	$user = $loginUser($_POST['userEmail'],$_POST['userPass']);
-	if ($user) {
-		setcookie("user", $user['name'], time() + (86400 * 30), "/");
+  if ($user) {
 		header("Location: /");
 	}else {
         echo "email yoki password noto'g'ri";
 	}
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

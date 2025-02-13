@@ -1,9 +1,9 @@
 <?php
+session_start();
 require "../controllers/user_controller.php";
 if(isset($_POST['userName'],$_POST['userEmail'],$_POST['userPass'])) {
 	$newUser = $registerUser($_POST['userName'],$_POST['userEmail'],$_POST['userPass']);
 	if($newUser) {
-		setcookie("user", $_POST['userName'], time() + (86400 * 30), "/");
 		header("Location: /");
 	}else {
 		echo "Siz avval registratsiyadan o'tgansiz iltimos <a href='register.php'>shu sahifaga o'ting</a>";

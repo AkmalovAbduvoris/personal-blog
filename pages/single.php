@@ -1,11 +1,10 @@
 <?php
-require "../db.php";
+require "../controllers/post_controller.php";
 
 if(isset($_POST['id'])) {
     $id = $_POST['id'];
 }
-
-$item = $db->query("SELECT * FROM posts WHERE id = $id")->fetch(PDO::FETCH_ASSOC);
+    $item = $singlePost($id);
 ?>
 <!DOCTYPE html>
 <html lang="en">

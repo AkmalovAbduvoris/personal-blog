@@ -1,15 +1,16 @@
 <?php
+session_start();
 require "./controllers/post_controller.php";
 
 if(isset($_COOKIE['user'])) {
 	$user = $_COOKIE['user'];
 }else {
-    header("Location: /pages/login.php");
+   header("Location: /pages/login.php");
 }
 ?>
 <!DOCTYPE html>
 <html lang="en">
-    <head>
+    <head>  
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -25,13 +26,14 @@ if(isset($_COOKIE['user'])) {
 		    </li>
 		<li>
 		<?php
-			if(!$user) {
+			if(!$_SESSION['email']) {
 			echo "<a href='/pages/login.php'>Login</a><a href='/pages/register.php'>Sign up</a>";
 			} else {
-			echo "<a href='/pages/user.php'>{$user}</a>";
+			echo "<a href='/pages/user.php'>{$_SESSION['email']}</a>";
 			}
 		?>
-		</li>
+    </li>
+<li><a href="/pages/logout.php">Exit</a></li>
         </ul>
         </div>
     </header>

@@ -4,9 +4,10 @@ require "./controllers/post_controller.php";
 
 $data = $fetchPosts();
 
-if(isset($_COOKIE['user'])) {
-	$user = $_COOKIE['user'];
-}else {
+if(isset($_SESSION['email'])) {
+    var_dump($_SESSION['email']);
+}
+else {
    header("Location: /pages/login.php");
 }
 

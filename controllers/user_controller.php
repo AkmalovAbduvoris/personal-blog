@@ -6,9 +6,9 @@ $loginUser = function($email, $password) use ($db) {
     $stmt->execute(['email' => $email]);
     
     $user = $stmt->fetch();
-
+    
     if ($user && $password == $user['password']) {
-      $_SESSION['email'] = $user['email'];
+        $_SESSION['email'] = $user['email'];
         return $user;
     }
     
@@ -35,13 +35,10 @@ $registerUser = function($name, $email, $password) use ($db) {
     }
 };
 
-$findUserId = function() use ($db) {
-    if(isset($_COOKIE['user'])) {
-        $userName = $_COOKIE['user'];
-        $user = $db->query("SELECT * FROM users WHERE name = '$userName'")->fetch();
-        $userId = $user['id'];
-        return $userId;
-    }
+$findUserId = function($email) use ($db) {
+    $user = $db->query("SELECT * FROM users WHERE email = '$email'")->fetch();
+    $userId = $user['id'];
+    return $userId;
 };
 
 $userPost = function($id) use ($db) {

@@ -41,15 +41,17 @@ $singlePost = function($id) use ($db) {
     return $item;
 };
 
-$searchPost = function($search) use ($db) {
+$searchPosts = function($search, $status) use ($db) {
     $stmt = $db->prepare("SELECT posts.id, title, text, name, created_at, updated_at 
                           FROM posts 
                           JOIN users ON posts.user_id = users.id 
-                          WHERE status = 'published' 
-                          AND title LIKE :search");
+                          WHERE title LIKE :search
+                          AND status LIKE :status");
     
     $like = "%$search%";
+    $likeStatus = "%$status%";
     $stmt->bindParam(':search', $like, PDO::PARAM_STR);
+    $stmt->bindParam(':status', $likeStatus, PDO::PARAM_STR);
     $stmt->execute();
     
     return $stmt->fetchAll(PDO::FETCH_ASSOC);

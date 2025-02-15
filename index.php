@@ -7,11 +7,9 @@ $data = $fetchPosts();
 if(!isset($_SESSION['email'])) {
     header("Location: /pages/login.php");
 }
-
-if(isset($_POST['findPost'])) {
-    $search = trim($_POST['findPost']);
-    $data = $searchPost($search);
-}
+$search = $_POST['findPost'] ?? '';
+$status = $_POST['status'] ?? '';
+$data = $search || $status ? $searchPosts($search, $status) : $fetchPosts();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -38,7 +36,7 @@ if(isset($_POST['findPost'])) {
 			}
 		?>
     </li>
-<li><a href="/pages/logout.php">Exit</a></li>
+    <li><a href="/pages/logout.php">Exit</a></li>
         </ul>
         </div>
     </header>
@@ -46,7 +44,12 @@ if(isset($_POST['findPost'])) {
             <div class="container">
                 <form action="/" method="post">
                     <div style="display: flex; width: 50%; margin: 0 auto;">
-                        <input class="form-control" type="text" name="findPost" id="" placeholder="Qidirish:">
+                        <input class="form-control" type="text" name="findPost" id="" placeholder="Qidirish:" value="<?= $_POST['findPost'] ?? ''?>">
+                        <select name="status">
+                            <option value=''>All</option>
+                            <option value='published' <?= $_POST['status'] =='published' ? 'selected' : ''?>>Published</option>
+                            <option value='drafted' <?= $_POST['status'] == 'drafted' ? 'selected' : ''?>>Drafted</option>
+                        </select>
                         <button type="sumbit">Qidirish</button>
                     </div>
                 </form>

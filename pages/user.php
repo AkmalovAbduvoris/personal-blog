@@ -1,12 +1,12 @@
 <?php
+    session_start();
     require "../controllers/user_controller.php";
     require "../controllers/post_controller.php";
 
     $title = isset($_POST['title']) ? $_POST['title'] : null;
     $text = isset($_POST['text']) ? $_POST['text'] : null;
     $status = isset($_POST['status']) ? $_POST['status'] : null;
-
-    $userId = $findUserId();
+    $userId = $findUserId($_SESSION['email']);
 
     if($text != null && $title != null) {
         $createPost($title,$text,$status,$userId);

@@ -1,15 +1,14 @@
 <?php
 session_start();
 require "./controllers/post_controller.php";
-
-$data = $fetchPosts();
+$currentPage = isset($_GET['page']) ? (int) $_GET['page'] : 1; // Agar page berilmasa, 1-sahifa deb olinadi
 
 if(!isset($_SESSION['email'])) {
     header("Location: /pages/login.php");
 }
 $search = $_POST['findPost'] ?? '';
 $status = $_POST['status'] ?? '';
-$data = $search || $status ? $searchPosts($search, $status) : $fetchPosts();
+$data = $search || $status ? $searchPosts($search, $status) : $fetchPosts($currentPage);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -21,25 +20,26 @@ $data = $search || $status ? $searchPosts($search, $status) : $fetchPosts();
         <title>Document</title>
     </head> 
     <body>
-    <header>
+    <!-- <header>
         <div class="container">
         <ul class="header__list">
     		<li>
             	<a href="/">Home</a>
 		    </li>
-		<li>
+		<li> -->    
 		<?php
-			if(!$_SESSION['email']) {
-			echo "<a href='/pages/login.php'>Login</a><a href='/pages/register.php'>Sign up</a>";
-			} else {
-			echo "<a href='/pages/user.php'>{$_SESSION['email']}</a>";
-			}
+        require './header.php';
+			// if(!$_SESSION['email']) {
+			// echo "<a href='/pages/login.php'>Login</a><a href='/pages/register.php'>Sign up</a>";
+			// } else {
+			// echo "<a href='/pages/user.php'>{$_SESSION['email']}</a>";
+			// }
 		?>
-    </li>
+    <!-- </li>
     <li><a href="/pages/logout.php">Exit</a></li>
         </ul>
         </div>
-    </header>
+    </header> -->
         <div class="wrapper">
             <div class="container">
                 <form action="/" method="post">
@@ -56,8 +56,8 @@ $data = $search || $status ? $searchPosts($search, $status) : $fetchPosts();
             <ul class="list">
             <?php
             
-                if(count($data) > 0) {
-                    foreach($data as $item) {
+                if(count($data['posts']) > 0) {
+                    foreach($data['posts'] as $item) {
                         echo "
                         <li class='item'>
                         <h2>{$item['title']}</h2>
@@ -77,8 +77,14 @@ $data = $search || $status ? $searchPosts($search, $status) : $fetchPosts();
                     echo "<h1 style='text-align:center;'>There is no news announced at this time..</h1>";
                 }
             ?>
+                <?php
+                    paginate($data['totalPages'], $currentPage);
+                ?>
             </div>
         </ul>
     </div>
+        <?php
+        require './footer.php';
+        ?>
 </body>
 </html>

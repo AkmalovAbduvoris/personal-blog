@@ -17,9 +17,29 @@ $editPost = function($newTitle, $newText, $newStatus, $id) use ($db) {
     $stmt->execute();
 };
 
-$fetchPosts = function()  use ($db) {
-    $data = $db->query("SELECT posts.id, title, text, name, created_at, updated_at FROM posts JOIN users on posts.user_id = users.id WHERE status = 'published'")->fetchAll(PDO::FETCH_ASSOC); 
-    return $data;
+$fetchPosts = function($currentPage) use ($db) {
+    $postsPerPage = 2;
+    $offset = ($currentPage - 1) * $postsPerPage;
+
+    $postsCountStmt = $db->query("SELECT COUNT(*) AS posts_count FROM posts WHERE status = 'published'");
+    $postsCount = $postsCountStmt->fetch()['posts_count'];
+    $totalPages = ceil($postsCount / $postsPerPage);
+
+    $stmt = $db->prepare("
+        SELECT posts.id, title, text, name, created_at, updated_at 
+        FROM posts 
+        JOIN users ON posts.user_id = users.id 
+        LIMIT :limit OFFSET :offset
+    ");
+
+    $stmt->bindValue(':limit', $postsPerPage, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+    $stmt->execute();
+    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return [
+        'posts' => $data,
+        'totalPages' => $totalPages
+    ];
 };
 
 $createPost = function($title, $text, $status, $userId) use ($db) {
@@ -56,3 +76,16 @@ $searchPosts = function($search, $status) use ($db) {
     
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 };
+
+
+function paginate($totalPages, $currentPage) {
+    echo "<div style='margin-top: 20px;'>";
+    
+    for ($page = 1; $page <= $totalPages; $page++) { 
+        if ($currentPage == $page) {
+            echo "<span style='margin-right:10px; font-weight:bold; color:red;'> $page </span>";
+        } else {
+            echo "<a href='?page=$page' style='margin-right:10px; text-decoration:none;'> $page </a>";
+        }
+    }
+}
